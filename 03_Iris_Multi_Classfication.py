@@ -43,8 +43,19 @@ model.compile(loss='categorical_crossentropy',
             optimizer='adam',
             metrics=['accuracy'])
 
+# <-- add tensorboard below 9
+import os
+import datetime
+LOGS_DIR = './logs/fit/'
+if not os.path.exists(LOGS_DIR):
+   os.makedirs(LOGS_DIR)
+log_dir = LOGS_DIR + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+# add callbacks=[tensorboard_callback] with model.fit()
+# % tensorboard --logdir logs/fit
+
 # 모델 실행
-model.fit(X, Y_encoded, epochs=50, batch_size=1)
+model.fit(X, Y_encoded, epochs=50, batch_size=1, callbacks=[tensorboard_callback])
 
 # 결과 출력
 print("\n Accuracy: %.4f" % (model.evaluate(X, Y_encoded)[1]))

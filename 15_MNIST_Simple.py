@@ -45,8 +45,29 @@ modelpath="./model/{epoch:02d}-{val_loss:.4f}.hdf5"
 checkpointer = ModelCheckpoint(filepath=modelpath, monitor='val_loss', verbose=1, save_best_only=True)
 early_stopping_callback = EarlyStopping(monitor='val_loss', patience=10)
 
+# <-- add tensorboard below on CLI
+import os
+import datetime
+LOGS_DIR = './logs/images/'
+if not os.path.exists(LOGS_DIR):
+   os.makedirs(LOGS_DIR)
+
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=LOGS_DIR)
+# Creates a file writer for the log directory.
+file_writer = tf.summary.create_file_writer(LOGS_DIR)
+# Reshape the image for the Summary API.
+import numpy as np
+image = np.reshape(X_train[0], (-1, 28, 28, 1))
+# Using the file writer, log the reshaped image.
+with file_writer.as_default():
+#   tf.summary.image("Training data", img, step=0)
+  images = np.reshape(X_train[25:50], (-1, 28, 28, 1))
+  tf.summary.image("25 training data examples", images, max_outputs=25, step=0)  
+
+# % tensorboard --logdir LOGS_DIR
+
 # 모델의 실행
-history = model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=30, batch_size=200, verbose=0, callbacks=[early_stopping_callback,checkpointer])
+history = model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=100, batch_size=200, verbose=0, callbacks=[early_stopping_callback,checkpointer,tensorboard_callback])
 
 # 테스트 정확도 출력
 print("\n Test Accuracy: %.4f" % (model.evaluate(X_test, Y_test)[1]))

@@ -4,6 +4,7 @@
 # 코드 내부에 한글을 사용가능 하게 해주는 부분입니다.
 
 # 딥러닝을 구동하는 데 필요한 케라스 함수를 불러옵니다.
+import imp
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
@@ -27,6 +28,17 @@ model = Sequential()
 model.add(Dense(30, input_dim=17, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
+# <-- add tensorboard below 9
+import os
+import datetime
+LOGS_DIR = './logs/fit/'
+if not os.path.exists(LOGS_DIR):
+   os.makedirs(LOGS_DIR)
+log_dir = LOGS_DIR + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+# add callbacks=[tensorboard_callback] with model.fit()
+# % tensorboard --logdir logs/fit
+
 # 딥러닝을 실행합니다.
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-model.fit(X, Y, epochs=100, batch_size=10)
+model.fit(X, Y, epochs=100, batch_size=10, callbacks=[tensorboard_callback])
