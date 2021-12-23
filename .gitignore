@@ -1,3 +1,5 @@
 .vscode/**
-./model/
-**/.DS_Store
+model/
+**.DS_Store
+logs/**
+gan_images/*
