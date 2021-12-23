@@ -1,5 +1,5 @@
 .vscode/**
-model/
+model/**
 **.DS_Store
 logs/**
 gan_images/*

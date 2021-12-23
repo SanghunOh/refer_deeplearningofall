@@ -49,8 +49,13 @@ modelpath="./model/{epoch:02d}-{val_loss:.4f}.hdf5"
 checkpointer = ModelCheckpoint(filepath=modelpath, monitor='val_loss', verbose=1, save_best_only=True)
 early_stopping_callback = EarlyStopping(monitor='val_loss', patience=10)
 
+LOGS_DIR = './logs/'
+if not os.path.exists(LOGS_DIR):
+   os.makedirs(LOGS_DIR)
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=LOGS_DIR, histogram_freq=1, write_graph=True,write_images=True)
+
 # 모델의 실행
-history = model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=30, batch_size=200, verbose=0, callbacks=[early_stopping_callback,checkpointer])
+history = model.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=30, batch_size=200, verbose=0, callbacks=[early_stopping_callback,checkpointer,tensorboard_callback])
 
 # 테스트 정확도 출력
 print("\n Test Accuracy: %.4f" % (model.evaluate(X_test, Y_test)[1]))
