@@ -1,5 +1,5 @@
-.vscode/**
-model/**
+.vscode/
+model
 **.DS_Store
-logs/**
-gan_images/*
+logs/
+gan_images/
