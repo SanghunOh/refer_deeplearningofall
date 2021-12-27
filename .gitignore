@@ -1,5 +1,8 @@
 .vscode/
-model
+model/
+models/
 **.DS_Store
 logs/
 gan_images/
+test/
+train/
